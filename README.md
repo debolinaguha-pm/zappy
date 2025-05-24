@@ -5,7 +5,7 @@
 ## Step 1: Clone this repository
 
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/debolinaguha-pm/zappy.git>
 ```
 
 ## Step 2: Create an environment
