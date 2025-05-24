@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="mb-4">Project: {{ project.name }}</h2>
+<div class="d-flex justify-content-end mb-3">
+  <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+</div>
+
+<!-- New Update Form -->
+<form method="POST" class="mb-4">
+  <div class="mb-3">
+    <label for="update_text" class="form-label">New Update</label>
+    <textarea class="form-control" id="update_text" name="update_text" rows="3" required></textarea>
+  </div>
+  <input type="hidden" name="author" value="{{ email or 'System' }}">
+  <button type="submit" class="btn btn-primary">Add Update</button>
+</form>
+
+<!-- Date Filter Form -->
+<form method="get" class="mb-4 d-flex gap-3 align-items-end">
+  <div>
+    <label for="start_date" class="form-label">From</label>
+    <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date }}">
+  </div>
+  <div>
+    <label for="end_date" class="form-label">To</label>
+    <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date }}">
+  </div>
+  <button type="submit" class="btn btn-outline-secondary">Filter</button>
+</form>
+
+<!-- Update History -->
+<h4>Update History</h4>
+<ul class="list-group mb-3">
+  {% for update in updates.items %}
+    <li class="list-group-item">
+      <p class="mb-1">{{ update.update_text }}</p>
+      <small class="text-muted">
+        {{ update.created_at.strftime('%Y-%m-%d %H:%M') }}
+        {% if update.author %} by {{ update.author }}{% endif %}
+      </small>
+    </li>
+  {% else %}
+    <li class="list-group-item text-muted">No updates found for the selected range.</li>
+  {% endfor %}
+</ul>
+
+<!-- Pagination -->
+<nav>
+  <ul class="pagination">
+    {% if updates.has_prev %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('project_updates', project_id=project.id, page=updates.prev_num, start_date=start_date, end_date=end_date) }}">Previous</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+    {% endif %}
+
+    {% for num in range(1, updates.pages + 1) %}
+      <li class="page-item {% if num == updates.page %}active{% endif %}">
+        <a class="page-link" href="{{ url_for('project_updates', project_id=project.id, page=num, start_date=start_date, end_date=end_date) }}">{{ num }}</a>
+      </li>
+    {% endfor %}
+
+    {% if updates.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('project_updates', project_id=project.id, page=updates.next_num, start_date=start_date, end_date=end_date) }}">Next</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Next</span></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}
