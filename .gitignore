@@ -1,0 +1,48 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# macOS specific
+.DS_Store
+
+# Flask SQLite database and migrations
+instance/
+*.sqlite3
+*.db
+*.db-journal
+
+# Flask cache and sessions
+flask_session/
+
+# PyInstaller artifacts
+build/
+dist/
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+
+# Log files
+*.log
