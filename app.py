@@ -1,10 +1,12 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, session 
+import os, signal
 from flask_sqlalchemy  import SQLAlchemy 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from models import db, User, Project, ProjectUpdate
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import random
+from flask import abort
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'this_should_be_a_secret'
@@ -241,6 +243,18 @@ def project_updates(project_id):
 
     return render_template('project_updates.html', project=project, updates=paginated_updates, start_date=start_date_str, end_date=end_date_str)
 
+from flask import request, abort
+
+@app.route('/shutdown', methods=['POST'])
+@login_required
+def shutdown():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
+    print("Shutdown requested by user:", current_user.id)  # Or current_user.email
+
+    os.kill(os.getpid(), signal.SIGTERM)
+    return "Server is shutting down..."
 
 @app.route('/')
 def home():
