@@ -20,11 +20,11 @@
           <div class="mb-3">
             <label class="form-label">Status</label>
             <select name="status" class="form-select">
-              {% for option in ['Not Started', 'In Progress', 'Completed'] %}
+              {% for option in ['Not Started', 'In Progress', 'Completed', 'Qualified', 'POC/ Demo', 'Technicals (BOQ Freeze)', 'Commercials submitted', 'Negotiations', 'PO/ LOI', 'Won', 'Lost', 'Advance Received', 'Delivery received', 'Installation received'] %}
               <option value="{{ option }}" {% if project.status == option %}selected{% endif %}>{{ option }}</option>
               {% endfor %}
             </select>
-          </div>
+        </div>
           <div class="mb-3">
             <label class="form-label">Deadline</label>
             <input name="deadline" type="date" class="form-control"

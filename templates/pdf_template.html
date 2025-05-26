@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h1, h2, h3 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #999; padding: 5px; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Project: {{ project.name }}</h1>
+    <p><strong>Client:</strong> {{ project.client }}</p>
+    <p><strong>Status:</strong> {{ project.status }}</p>
+    <p><strong>Deadline:</strong> {{ project.deadline.strftime('%Y-%m-%d') if project.deadline else '—' }}</p>
+    <p><strong>Description:</strong> {{ project.description }}</p>
+    <p><strong>POC Name:</strong> {{ project.poc_name }}</p>
+    <p><strong>POC Email:</strong> {{ project.poc_email }}</p>
+    <p><strong>POC Number:</strong> {{ project.poc_number }}</p>
+    <hr>
+    <h2>Update History</h2>
+    <table>
+        <tr><th>Timestamp</th><th>Author</th><th>Update Text</th></tr>
+        {% for update in updates %}
+        <tr>
+            <td>{{ update.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ update.author or 'System' }}</td>
+            <td>{{ update.update_text }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -42,9 +42,11 @@
     <label for="status" class="form-label visually-hidden">Status</label>
     <select name="status" id="status" class="form-select">
       <option value="">All Statuses</option>
-      <option value="In Progress" {% if request.args.get('status') == 'In Progress' %}selected{% endif %}>In Progress</option>
-      <option value="Completed" {% if request.args.get('status') == 'Completed' %}selected{% endif %}>Completed</option>
+      {% for option in ['Not Started', 'In Progress', 'Completed', 'Qualified', 'POC/ Demo', 'Technicals (BOQ Freeze)', 'Commercials submitted', 'Negotiations', 'PO/ LOI', 'Won', 'Lost', 'Advance Received', 'Delivery received', 'Installation received'] %}
+      <option value="{{ option }}" {% if request.args.get('status') == option %}selected{% endif %}>{{ option }}</option>
+      {% endfor %}
     </select>
+
   </div>
 
   <div class="col-md-2">

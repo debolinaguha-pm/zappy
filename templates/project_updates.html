@@ -2,6 +2,7 @@
 {% block content %}
 <h2 class="mb-4">Project: {{ project.name }}</h2>
 <div class="d-flex justify-content-end mb-3">
+  <a href="{{ url_for('download_project_updates_pdf', project_id=project.id, start_date=start_date, end_date=end_date) }}" class="btn btn-outline-primary">Download PDF</a>
   <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
 </div>
 

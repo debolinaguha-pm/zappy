@@ -1,4 +1,6 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, session 
+from flask import Flask, render_template, redirect, url_for, request, flash, session, make_response, render_template_string
+from xhtml2pdf import pisa
+from io import BytesIO
 import os, signal
 from flask_sqlalchemy  import SQLAlchemy 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -149,7 +151,7 @@ def add_project():
 		poc_name=poc_name,
 		poc_email=poc_email,
 		github_link=github_link,
-		user_id=current_user.id
+		user_id=current_user.id,
 	)
 
 		db.session.add(new_project)
@@ -237,7 +239,43 @@ def project_updates(project_id):
     per_page = 5
     paginated_updates = updates_query.order_by(ProjectUpdate.created_at.desc()).paginate(page=page, per_page=per_page)
 
+    # ✅ Always return a template at the end
     return render_template('project_updates.html', project=project, updates=paginated_updates, start_date=start_date_str, end_date=end_date_str)
+
+
+# ✅ Move this out to the global level
+@app.route('/project/<int:project_id>/updates/pdf')
+@login_required
+def download_project_updates_pdf(project_id):
+    project = Project.query.get_or_404(project_id)
+    
+    # Optional: Handle date filter
+    start_date_str = request.args.get('start_date')
+    end_date_str = request.args.get('end_date')
+    updates_query = ProjectUpdate.query.filter_by(project_id=project.id)
+    
+    if start_date_str:
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+        updates_query = updates_query.filter(ProjectUpdate.created_at >= start_date)
+    if end_date_str:
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+        updates_query = updates_query.filter(ProjectUpdate.created_at <= end_date)
+    
+    updates = updates_query.order_by(ProjectUpdate.created_at.desc()).all()
+    
+    rendered_html = render_template('pdf_template.html', project=project, updates=updates)
+    
+    pdf = BytesIO()
+    pisa_status = pisa.CreatePDF(rendered_html, dest=pdf)
+    pdf.seek(0)
+    
+    if pisa_status.err:
+        return "Error generating PDF", 500
+    
+    response = make_response(pdf.read())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename=project_{project.id}_updates.pdf'
+    return response
 
 from flask import request, abort
 
