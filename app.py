@@ -149,11 +149,7 @@ def add_project():
 		poc_name=poc_name,
 		poc_email=poc_email,
 		github_link=github_link,
-		user_id=current_user.id,
-        
-        unique_project_names=unique_project_names,
-        unique_clients=unique_clients,
-        statuses=statuses,
+		user_id=current_user.id
 	)
 
 		db.session.add(new_project)

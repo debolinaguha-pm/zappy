@@ -9,7 +9,9 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     name = db.Column(db.String(256), nullable=False)
-    banner_image = db.Column(db.String(100), nullable=True)  # store image filename or URL
+    banner_image = db.Column(db.String(100), nullable=True)
+    
+    projects = db.relationship('Project', backref='user', cascade='all, delete-orphan')
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,6 +28,8 @@ class Project(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    updates = db.relationship('ProjectUpdate', backref='project', cascade='all, delete-orphan', lazy=True)
 
 class ProjectUpdate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,5 +37,3 @@ class ProjectUpdate(db.Model):
     update_text = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     author = db.Column(db.String(100))  # Optional: who made the update
-
-    project = db.relationship('Project', backref=db.backref('updates', lazy=True))
