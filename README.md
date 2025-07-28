@@ -109,4 +109,10 @@ python app.py
 ✅ Done! You now have a one-click app launcher with your logo as an icon.
 
 
+**Future-Proofing:**
+
+- Check if it saves logs while running & make sure to delete them once the app is closed or periodically to prevent system crashing or storage run-out.
+- Containerize it so that can be opened with just a click!
+
+
 
